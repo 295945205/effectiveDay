@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="application/Bootstrap.php">
+    <testsuites>
+        <testsuite name="whovian">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">application/library</directory>
+        </whitelist>
+    </filter>
+</phpunit>
