@@ -10,6 +10,7 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
     <style>
         .user-page {
             width: 380px;
@@ -22,30 +23,6 @@
             border-radius: 100px !important;
         }
     </style>
-    <script>
-        function validateEmail() {
-            var email = document.getElementById("username").value;
-
-            var validEmailRegEx = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i
-            var isEmailValid = validEmailRegEx.test(email);
-
-            if (isEmailValid == false) {
-                document.getElementById("validation-message").innerHTML = "Invalid Email!";
-                var div = document.getElementById("username");
-                div.style.borderColor ='red';
-                document.getElementById("signin").disabled = true;
-            }
-            else{
-                document.getElementById("validation-message").innerHTML = "";
-                var div = document.getElementById("username");
-                div.style.borderColor ='#888';
-                document.getElementById("signin").disabled = false;
-            }
-        }
-        function addParameters(){
-            window.location.href = '/portal/getstarted' + window.location.href.split('/portal/login')[1];
-        }
-    </script>
 </head>
 <body class="user-page  pace-done">
 <div class="container-fluid">
@@ -54,13 +31,14 @@
             <h3>effectiveDay</h3>
         </div>
         <form method="post" style="padding-top: 10px;">
-            <div class="form-group" style="margin-bottom: 15px">
-                <input id="username" name="username" type="text" aria-describedby="exampleInputEmail" placeholder="Email" class="form-control rounded" onkeyup="validateEmail();" oninput="validateEmail();" required="">
+            <div class="form-group">
+                <input v-model="email" name="email" type="text"  aria-describedby="exampleInputEmail" placeholder="Email" class="form-control rounded" v-on:keyup="validateEmail" v-on:input="validateEmail" required="">
             </div>
-            <div class="form-group" style="margin-bottom: 25px">
-                <input id="password" name="password" type="text" aria-describedby="exampleInputEmail" placeholder="Password" class="form-control rounded" onkeyup="addParameters();" oninput="addParameters();" required="">
+            <div  v-show="validationMessage" style="color: red">Invalid Email!</div>
+            <div class="form-group" style="margin-top: 15px;">
+                <input v-model="password" name="password" type="text" aria-describedby="exampleInputEmail" placeholder="Password" class="form-control rounded" onkeyup="addParameters();" oninput="addParameters();" required="">
             </div>
-            <button type="submit" onclick="logEvent('login')" id="signin" class="btn btn-lg btn-success btn-raised btn-block" disabled="">Sign In</button>
+            <button type="submit" v-on:click="login" class="btn btn-lg btn-success btn-raised btn-block" style="margin-top: 25px" disabled="">Sign In</button>
         </form>
         <hr style="margin-top:12px;">
         <div class="form-horizontal">
@@ -73,5 +51,43 @@
         </div>
     </div>
 </div>
+<script>
+    var app = new Vue({
+        el:".container-fluid",
+        data: {
+            email:"",
+            password:"",
+            validationMessage:false
+        },
+        methods:{
+            validateEmail:function(event){
+                var validEmailRegEx = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i
+                var isEmailValid = validEmailRegEx.test(this.email);
+
+                if (isEmailValid == false) {
+                    this.validationMessage = true;
+                }
+                else{
+                    this.validationMessage=false
+                }
+            },
+            login:function(event){
+                $.ajax({
+                    url:"${pageContext.request.contextPath}/public/testupload",
+                    type:"post",
+                    data:{username:username},
+                    success:function(data){
+                        window.clearInterval(timer);
+                        console.log("over..");
+                    },
+                    error:function(e){
+                        alert("错误！！");
+                        window.clearInterval(timer);
+                    }
+                });
+            }
+        }
+    })
+</script>
 </body>
 </html>
