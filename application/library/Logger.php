@@ -34,7 +34,7 @@ class Logger
         $transport = Swift_SmtpTransport::newInstance('smtp.qq.com',465,'ssl')->setUsername('295945205@qq.com')
             ->setPassword('jbcmolklgnrncbci');
         $mailer    = Swift_Mailer::newInstance($transport);
-        $message   = Swift_Message::newInstance()->setSubject('website error!')
+        $message   = Swift_Message::newInstance()->setSubject('EffectiveDay error!')
             ->setFrom(array('295945205@qq.com' => 'David'))
             ->setTo(array('295945205@qq.com' => 'szh'));
 
